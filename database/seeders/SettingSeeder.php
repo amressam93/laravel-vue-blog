@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class SettingSeeder extends Seeder
@@ -13,6 +14,10 @@ class SettingSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Setting::create([
+            'site_name' => 'larabBlogs',
+            'contact_email' => 'info@larablogs.com',
+            'address' => 'Egypt,haram,giza'
+        ]);
     }
 }
