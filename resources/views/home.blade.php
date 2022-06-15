@@ -16,7 +16,7 @@
                 </h1>
 
                 <!-- Blog Post -->
-                <posts></posts>
+                <global-home></global-home>
 
 
 
