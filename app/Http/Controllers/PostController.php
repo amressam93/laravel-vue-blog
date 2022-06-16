@@ -63,7 +63,14 @@ class PostController extends Controller
             'user'           => $post->user,
             'title'          => $post->title,
             'category'       => $post->category,
-            'comments'       => $this->commentsFormatted($post->comments)
+            'comments'       => $post->comments->map(function ($comment){
+                return[
+                    'id'=>$comment->id,
+                    'body'=>$comment->body,
+                    'user'=>$comment->user,
+                    'added_at'=>$comment->created_at->diffForHumans()
+                ];
+            })
         ]);
 
 
@@ -85,6 +92,8 @@ class PostController extends Controller
                'added_at' => $comment->created_at->diffForHumans()
             ]);
         }
+
+        return $new_comments;
 
     }
 

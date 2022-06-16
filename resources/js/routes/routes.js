@@ -9,8 +9,8 @@ import PostDetails from '../components/PostDetails.vue';
 
 const routes = [
 
-    {path: '/',component : Post,name: 'Post'},
-    {path: '/post/:slug',component : PostDetails,name: 'PostDetails'}
+    { path: '/',component : Post,name: 'Post' },
+    { path: '/post/:slug',component : PostDetails,name: 'PostDetails' }
 ];
 
 const router = new VueRouter({

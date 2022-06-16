@@ -20,3 +20,12 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//Route::get('{any}', function () {
+//    return view('layouts.app');
+//})->where('any', '.*');
+
+Route::get('post/{slug}',function (){
+    return view('blog_post');
+});
+
