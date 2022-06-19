@@ -60,29 +60,29 @@
 </template>
 
 <script>
-export default {
+    export default {
 
-    data(){
-        return{
-            post: ''
-        }
-    },
-    created(){
-        this.getPost();
-    },
-    methods: {
-        getPost(){
-            axios.get('/api/posts/'+this.$route.params.slug)
-                .then(res => {
-                    console.log(res);
-                    this.post = res.data;
+        data(){
+            return{
+                post: ''
+            }
+        },
+        created(){
+            this.getPost();
+        },
+        methods: {
+            getPost(){
+                axios.get('/api/posts/'+this.$route.params.slug)
+                    .then(res => {
+                        console.log(res);
+                        this.post = res.data;
+                    })
+                .catch(err => {
+                    console.log(err)
                 })
-            .catch(err => {
-                console.log(err)
-            })
+            }
         }
     }
-}
 </script>
 
 <style scoped>
