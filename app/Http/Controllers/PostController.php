@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -135,4 +136,27 @@ class PostController extends Controller
     {
         //
     }
+
+
+    /**
+     * get all posts by Category Slug.
+     * @param $slug
+     * @return void
+     */
+    public function categoryPosts($slug)
+    {
+        $category = Category::whereSlug($slug)->first();
+        $posts = Post::whereCategoryId($category->id)->with('user')->get();
+
+        foreach ($posts as $post)
+        {
+            $post->setAttribute('added_at',$post->created_at->diffForHumans());
+            $post->setAttribute('comments_count',$post->comments->count());
+        }
+
+        return response()->json($posts);
+    }
+
+
+
 }
