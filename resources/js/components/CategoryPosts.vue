@@ -52,7 +52,7 @@ export default {
             posts: []
         }
     },
-   
+
     mounted() {
         console.log('category posts component');
         this.getPosts();

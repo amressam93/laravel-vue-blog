@@ -9,7 +9,9 @@ use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
+
     /**
+     * return all posts.
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -26,6 +28,7 @@ class PostController extends Controller
     }
 
     /**
+     * create new post.
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -35,7 +38,10 @@ class PostController extends Controller
         //
     }
 
+
+
     /**
+     * store new post.
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StorePostRequest  $request
@@ -46,7 +52,7 @@ class PostController extends Controller
         //
     }
 
-    /**
+    /** display post by id.
      * Display the specified resource.
      *
      * @param  \App\Models\Post  $post
@@ -78,8 +84,11 @@ class PostController extends Controller
     }
 
 
-
-
+    /**
+     * custom Comments Formatted.
+     * @param $comments
+     * @return array
+     */
     public function commentsFormatted($comments)
     {
         $new_comments = [];
@@ -99,11 +108,8 @@ class PostController extends Controller
     }
 
 
-
-
-
-
     /**
+     *
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Post  $post
@@ -115,6 +121,7 @@ class PostController extends Controller
     }
 
     /**
+     * update post by id.
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdatePostRequest  $request
@@ -127,6 +134,7 @@ class PostController extends Controller
     }
 
     /**
+     * delete post by id.
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Post  $post
@@ -156,6 +164,28 @@ class PostController extends Controller
 
         return response()->json($posts);
     }
+
+
+    /**
+     * search posts
+     * @param $query
+     * @return void
+     */
+    public function searchPosts($query)
+    {
+        $posts = Post::with('user')
+            ->where('title','like','%'.$query.'%')
+            ->orWhere('body', 'like', '%'.$query.'%')
+            ->get();
+        foreach ($posts as $post)
+        {
+            $post->setAttribute('added_at',$post->created_at->diffForHumans());
+            $post->setAttribute('comments_count',$post->comments->count());
+        }
+
+        return response()->json($posts);
+    }
+
 
 
 

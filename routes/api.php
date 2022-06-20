@@ -23,3 +23,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('posts',\App\Http\Controllers\PostController::class);
 Route::apiResource('categories',\App\Http\Controllers\CategoryController::class);
 Route::get('category/{slug}/posts',[\App\Http\Controllers\PostController::class,'categoryPosts']);
+Route::get('searchposts/{query}',[\App\Http\Controllers\PostController::class,'searchPosts']);
+

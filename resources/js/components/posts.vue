@@ -1,6 +1,9 @@
 <template>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" v-if="issearching">
+            ..... searching posts
+        </div>
+        <div class="col-md-8" v-else="">
             <div class="media simple-post" v-for="post in posts" :key="post.id">
                 <img class="mr-3" :src="'img/'+post.image" alt="Generic placeholder image">
                 <div class="media-body">
@@ -27,17 +30,16 @@
                 <h5 class="card-header">Search</h5>
                 <div class="card-body">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
+                        <input type="text" class="form-control" placeholder="Search for..." v-model="searchpost">
                         <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
+                       </span>
                     </div>
                 </div>
             </div>
 
             <!-- Categories Widget -->
             <categories></categories>
-
 
         </div>
     </div>
@@ -49,11 +51,34 @@ import categories from './categories';
 export default {
     data(){
         return {
-            posts: []
+            posts: [],
+            searchpost: '',
+            issearching: false
         }
     },
     components : {
         categories
+    },
+    watch: {
+        searchpost(query){
+            if(query.length > 0)
+            {
+                console.log(query);
+                axios.get('/api/searchposts/'+query)
+                    .then(res => {
+                       this.posts = res.data;
+                       this.issearching = false
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            }
+            else{
+                let oldPosts = JSON.parse(localStorage.getItem('posts'));
+                this.posts = oldPosts;
+            }
+
+        }
     },
     mounted() {
         console.log('posts component');
@@ -65,7 +90,8 @@ export default {
             axios.get('/api/posts')
                 .then(res => {
                     console.log(res);
-                        this.posts = res.data
+                        this.posts = res.data;
+                        localStorage.setItem('posts',JSON.stringify(this.posts))
                     })
                 .then(err => console.log(err))
         }
