@@ -3,8 +3,8 @@
         <div class="col-md-8" v-if="issearching">
             ..... searching posts
         </div>
-        <div class="col-md-8" v-else="">
-            <div class="media simple-post" v-for="post in posts" :key="post.id">
+        <div class="col-md-8" v-else>
+            <div class="media simple-post" v-for="post in posts.data" :key="post.id">
                 <img class="mr-3" :src="'img/'+post.image" alt="Generic placeholder image">
                 <div class="media-body">
                     <h4 class="mt-0">
@@ -21,6 +21,7 @@
                     </ul>
                 </div>
             </div>
+            <pagination :data="posts" @pagination-change-page="getPosts"></pagination>
         </div>
         <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
@@ -51,9 +52,10 @@ import categories from './categories';
 export default {
     data(){
         return {
-            posts: [],
+            posts: {},
             searchpost: '',
-            issearching: false
+            issearching: false,
+
         }
     },
     components : {
@@ -67,7 +69,7 @@ export default {
                 axios.get('/api/searchposts/'+query)
                     .then(res => {
                        this.posts = res.data;
-                       this.issearching = false
+                       this.issearching = true
                     })
                     .catch(err => {
                         console.log(err);
@@ -86,13 +88,14 @@ export default {
     },
     methods:{
 
-        getPosts(){
-            axios.get('/api/posts')
+        getPosts(page){
+            axios.get('/api/posts?page='+page)
                 .then(res => {
                     console.log(res);
                         this.posts = res.data;
                         localStorage.setItem('posts',JSON.stringify(this.posts))
                     })
+
                 .then(err => console.log(err))
         }
 

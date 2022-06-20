@@ -30,6 +30,7 @@
         "jl-datatable": "^1.1.0",
         "jquery": "^3.6.0",
         "laravel-vue-datatable": "^0.6.0",
+        "laravel-vue-pagination": "^2.3.1",
         "vue-axios": "^3.4.1",
         "vue-router": "^3.5.4",
         "vue-tables-2": "^2.3.5",
