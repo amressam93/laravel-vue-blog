@@ -173,15 +173,19 @@ class PostController extends Controller
      */
     public function searchPosts($query)
     {
-        $posts = Post::with('user')
-            ->where('title','like','%'.$query.'%')
+        $posts = Post::where('title','like','%'.$query.'%')
             ->orWhere('body', 'like', '%'.$query.'%')
-            ->get();
-        foreach ($posts as $post)
+            ->with('user');
+
+        $number_of_posts = count($posts->get());  // get all rows count.
+
+        foreach ($posts->get() as $post)
         {
             $post->setAttribute('added_at',$post->created_at->diffForHumans());
             $post->setAttribute('comments_count',$post->comments->count());
         }
+
+        $posts = $posts->paginate(intval($number_of_posts));
 
         return response()->json($posts);
     }

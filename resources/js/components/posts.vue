@@ -65,11 +65,11 @@ export default {
         searchpost(query){
             if(query.length > 0)
             {
+                this.issearching = true;
                 console.log(query);
-                axios.get('/api/searchposts/'+query)
+                axios.get('/api/searchposts/'+query+'?page=1')
                     .then(res => {
                        this.posts = res.data;
-                       this.issearching = true
                     })
                     .catch(err => {
                         console.log(err);
@@ -79,7 +79,7 @@ export default {
                 let oldPosts = JSON.parse(localStorage.getItem('posts'));
                 this.posts = oldPosts;
             }
-
+            this.issearching = false;
         }
     },
     mounted() {
