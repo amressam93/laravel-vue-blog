@@ -10,7 +10,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="login-form">
-                        <form action="/examples/actions/confirmation.php" method="post" nonvaildate>
+                        <form action="" method="post" nonvaildate>
                             <h2 class="text-center">Create New Account</h2>
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="firstname" v-model="firstname">

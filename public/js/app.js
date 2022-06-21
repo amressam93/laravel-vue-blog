@@ -30225,13 +30225,7 @@ var render = function () {
             _c("div", { staticClass: "login-form" }, [
               _c(
                 "form",
-                {
-                  attrs: {
-                    action: "/examples/actions/confirmation.php",
-                    method: "post",
-                    nonvaildate: "",
-                  },
-                },
+                { attrs: { action: "", method: "post", nonvaildate: "" } },
                 [
                   _c("h2", { staticClass: "text-center" }, [
                     _vm._v("Create New Account"),
