@@ -39,6 +39,7 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary btn-block"
                                 :disabled='!isValidForm'
+                                 @click.prevent="submitRegister"
                                 >Create Account</button>
                             </div>
                             <div class="clearfix">
@@ -67,20 +68,27 @@ export default {
         }
     },
     computed: {
-        firstNameError(){
-            return this.firstname.length > 0 && this.firstname.length < 4
-        },
-        lastNameError(){
-            return this.lastname.length > 0 && this.lastname.length < 4
-        },
-        emailError(){
-            return !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) && this.email.length > 0
-        },
-        passwordError(){
-            return this.password.length > 0 && this.password.length < 8
-        },
-        isValidForm(){
-            return this.firstname.length >= 4 && this.lastname.length >= 4 && this.password.length >= 8 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
+
+            firstNameError(){
+                return this.firstname.length > 0 && this.firstname.length < 4
+            },
+            lastNameError(){
+                return this.lastname.length > 0 && this.lastname.length < 4
+            },
+            emailError(){
+                return !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) && this.email.length > 0
+            },
+            passwordError(){
+                return this.password.length > 0 && this.password.length < 8
+            },
+            isValidForm(){
+                return this.firstname.length >= 4 && this.lastname.length >= 4 && this.password.length >= 8 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
+            },
+    },
+    methods:{
+        submitRegister(){
+            console.log('submitted');
+
         }
     }
 
