@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
@@ -24,4 +25,11 @@ Route::apiResource('posts',\App\Http\Controllers\PostController::class);
 Route::apiResource('categories',\App\Http\Controllers\CategoryController::class);
 Route::get('category/{slug}/posts',[\App\Http\Controllers\PostController::class,'categoryPosts']);
 Route::get('searchposts/{query}',[\App\Http\Controllers\PostController::class,'searchPosts']);
+Route::post('register', [UserController::class, 'register']);
+Route::post('login', [UserController::class, 'login']);
+
+
+Route::middleware('auth:api')->group( function () {
+    Route::get('user',[UserController::class,'details']);
+});
 
