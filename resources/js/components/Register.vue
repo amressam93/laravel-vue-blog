@@ -13,15 +13,9 @@
                         <form action="" method="post" nonvaildate>
                             <h2 class="text-center">Create New Account</h2>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="firstname" v-model="firstname">
-                                <div class="text-danger" v-show="firstNameError">
-                                    .... the firstname is too short
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="lastname" v-model="lastname">
-                                <div class="text-danger" v-show="lastNameError">
-                                    .... the lastname is too short
+                                <input type="text" class="form-control" placeholder="name" v-model="name">
+                                <div class="text-danger" v-show="nameError">
+                                    .... the name is too short
                                 </div>
                             </div>
                             <div class="form-group">
@@ -36,6 +30,13 @@
                                     .... the password is too short
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <input type="password"  class="form-control" placeholder="Password Confirmation" v-model="password_confirmation">
+                                <div class="text-danger" v-show="passwordConfirmationError">
+                                    .... the password is too short
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary btn-block"
                                 :disabled='!isValidForm'
@@ -61,19 +62,17 @@ export default {
 
     data(){
         return{
-            firstname: '',
-            lastname: '',
+            name: '',
             password: '',
             email: '',
+            password_confirmation: ''
+
         }
     },
     computed: {
 
-            firstNameError(){
-                return this.firstname.length > 0 && this.firstname.length < 4
-            },
-            lastNameError(){
-                return this.lastname.length > 0 && this.lastname.length < 4
+            nameError(){
+                return this.name.length > 0 && this.name.length < 4
             },
             emailError(){
                 return !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) && this.email.length > 0
@@ -81,14 +80,21 @@ export default {
             passwordError(){
                 return this.password.length > 0 && this.password.length < 8
             },
+            passwordConfirmationError(){
+                return this.password_confirmation.length > 0 && this.password_confirmation.length < 8
+            },
             isValidForm(){
-                return this.firstname.length >= 4 && this.lastname.length >= 4 && this.password.length >= 8 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
+                return this.name.length >= 4  && this.password.length >= 8 && this.password_confirmation.length >= 8 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
             },
     },
     methods:{
         submitRegister(){
-            console.log('submitted');
 
+            // this.$store.state.userToken = "amressam0"
+            // console.log(this.$store.state.userToken);
+            // console.log(this.$store.getters.isLogged);
+            let {name,email,password,password_confirmation} = this;
+            this.$store.dispatch('RegisterUser',{name,email,password,password_confirmation})
         }
     }
 

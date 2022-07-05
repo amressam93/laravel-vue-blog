@@ -34,6 +34,7 @@
         "vue-axios": "^3.4.1",
         "vue-router": "^3.5.4",
         "vue-tables-2": "^2.3.5",
-        "vuejs-datatable": "^2.0.0-alpha.7"
+        "vuejs-datatable": "^2.0.0-alpha.7",
+        "vuex": "^3.4.0"
     }
 }

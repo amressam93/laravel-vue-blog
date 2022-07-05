@@ -33,8 +33,65 @@ Vue.component('login',require('./components/Login.vue').default);
  */
 
 import router from './routes/routes'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+    state: {
+        userToken : null
+    },
+    getters: {
+        isLogged(state){
+            return !!state.userToken;
+        }
+    },
+    mutations: {
+      setUserToken(state,userToken){
+
+          state.userToken = userToken;
+
+          localStorage.setItem('userToken',JSON.stringify(userToken));
+
+          axios.defaults.headers.common.Authoriztion = `bearer ${userToken}`
+      },
+        removeUserToken(state){
+          state.userToken = null;
+          localStorage.removeItem('userToken');
+
+        }
+
+    },
+    actions: {
+
+        RegisterUser({commit},payload){
+            axios.post('/api/register',payload)
+                .then(res => {
+                    console.log(res)
+                    commit('setUserToken',res.data.token)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        LoginUser({commit},payload){
+            axios.post('/api/login',payload)
+                .then(res => {
+                    console.log(res)
+                    commit('setUserToken',res.data.token)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+
+    }
+
+})
+
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    store:store
 });
