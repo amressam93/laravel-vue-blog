@@ -16,7 +16,7 @@
 
         <!-- Date/Time -->
         <p>Posted on <strong class="badge badge-primary p-1">{{post.added_at}}</strong>
-            <span class="float-right"><strong class="badge badge-info p-1">{{post.comments_count}}</strong> comments</span></p>
+            <span class="float-right"><strong class="badge badge-info p-1">{{ comments.length }}</strong> comments</span></p>
         <hr>
 
         <!-- Preview Image -->
@@ -33,10 +33,11 @@
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
                 <form>
+                    <input type="hidden" name="" v-model="post_id">
                     <div class="form-group">
-                        <textarea class="form-control" rows="3"></textarea>
+                        <textarea class="form-control" rows="3" v-model="body"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" @click.prevent="addComment">Submit</button>
                 </form>
             </div>
         </div>
@@ -64,11 +65,15 @@
 
         data(){
             return{
-                post: ''
+                post: '',
+                body:'',
+                post_id:'',
+                comments:[],
             }
         },
         created(){
             this.getPost();
+            this.updateToken();
         },
         methods: {
             getPost(){
@@ -76,10 +81,29 @@
                     .then(res => {
                         console.log(res);
                         this.post = res.data;
+                        this.post_id = this.post.id
+                        this.comments = this.post.comments;
                     })
                 .catch(err => {
                     console.log(err)
                 })
+            },
+            addComment(){
+                let {body,post_id} = this;
+                axios.post('/api/comment/create',{body,post_id})
+                    .then(res => {
+                        console.log(res.data);
+                        this.comments.unshift(res.data);
+                    })
+            },
+            updateToken(){
+                let token = JSON.parse(localStorage.getItem('userToken'));
+                this.$store.commit('setUserToken',token);
+            }
+        },
+        computed: {
+            isLogged(){
+                return this.$store.getters.isLogged;
             }
         }
     }
