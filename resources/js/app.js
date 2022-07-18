@@ -38,11 +38,18 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        userToken : null
+        userToken : null,
+        user : null,
     },
     getters: {
         isLogged(state){
             return !!state.userToken;
+        },
+        isAdmin(state) {
+            if (state.user) {
+                return state.user.is_admin;
+            }
+            return null;
         }
     },
     mutations: {
@@ -58,6 +65,15 @@ const store = new Vuex.Store({
           state.userToken = null;
           localStorage.removeItem('userToken');
 
+        },
+        setUser(state,user){
+            state.user = user;
+
+        },
+        logout(state){
+          state.userToken = null;
+          localStorage.removeItem('userToken');
+          window.location.pathname = "/";
         }
 
     },
@@ -79,6 +95,11 @@ const store = new Vuex.Store({
                 .then(res => {
                     console.log(res)
                     commit('setUserToken',res.data.token)
+                    axios('/api/user')
+                        .then(res => {
+                            console.log(res)
+                            commit('setUser', res.data.user)
+                        })
                 })
                 .catch(err => {
                     console.log(err)
@@ -86,6 +107,7 @@ const store = new Vuex.Store({
         }
 
     }
+
 
 })
 

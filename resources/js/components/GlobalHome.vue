@@ -10,7 +10,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <router-link class="nav-link" to="/admin">admin
+                            <router-link class="nav-link" v-if="isAdmin" to="/admin">admin
                                 <span class="sr-only">(current)</span>
                             </router-link>
                         </li>
@@ -29,12 +29,17 @@
                             <a class="nav-link" href="contact.html">Contact</a>
                         </li>
 
-                        <li class="nav-item register-btn reg-login-btn" data-toggle="modal" data-target="#register-modal">
+                        <li v-if="!isLogged" class="nav-item register-btn reg-login-btn" data-toggle="modal" data-target="#register-modal">
                             <a class="btn btn-info nav-link" href="" data-toggle="modal" data-target="#register-modal">Register</a>
                         </li>
-                        <li class="nav-item reg-login-btn" data-toggle="modal" data-target="#login-modal">
+                        <li v-if="!isLogged" class="nav-item reg-login-btn" data-toggle="modal" data-target="#login-modal">
                             <a class="btn btn-primary text-weight nav-link" href="#">login</a>
                         </li>
+
+                        <li class="nav-item" v-if="isLogged" @click.stop="logout">
+                            <a class="nav-link">logout</a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -47,6 +52,39 @@
 <script>
 export default {
 
+    created() {
+        this.updateToken();
+        this.setUser();
+    },
+
+    methods:{
+
+        updateToken(){
+            let token = JSON.parse(localStorage.getItem('userToken'));
+            this.$store.commit('setUserToken',token);
+        },
+        setUser(){
+
+            if(this.isLogged){
+
+                axios('/api/user')
+                    .then(res => {
+                        this.$store.commit('setUser', res.data.user)
+                    })
+            }
+        },
+        logout(){
+            this.$store.commit('logout');
+        }
+    },
+    computed: {
+       isLogged() {
+           return this.$store.getters.isLogged;
+       },
+        isAdmin(){
+            return this.$store.getters.isAdmin;
+        }
+    },
 }
 </script>
 
