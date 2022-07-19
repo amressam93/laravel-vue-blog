@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -33,5 +34,12 @@ Route::post('login', [UserController::class, 'login']);
 Route::middleware('auth:api')->group( function () {
     Route::get('user',[UserController::class,'details']);
     Route::post('comment/create',[CommentController::class,'store']);
+});
+
+
+Route::group(['prefix' => '/admin','middleware' => 'auth:api'],function(){
+
+    Route::get('posts',[AdminController::class,'getPosts']);
+
 });
 

@@ -63,14 +63,15 @@ export default {
             let token = JSON.parse(localStorage.getItem('userToken'));
             this.$store.commit('setUserToken',token);
         },
+
         setUser(){
 
             if(this.isLogged){
 
-                axios('/api/user')
-                    .then(res => {
-                        this.$store.commit('setUser', res.data.user)
-                    })
+                    axios('/api/user')
+                        .then(res => {
+                            this.$store.commit('setUser', res.data.user)
+                        })
             }
         },
 

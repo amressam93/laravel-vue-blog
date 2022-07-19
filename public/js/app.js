@@ -6081,7 +6081,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "AdminIndex"
+  data: function data() {
+    return {
+      posts: {}
+    };
+  },
+  created: function created() {
+    this.getPosts();
+  },
+  methods: {
+    getPosts: function getPosts(page) {
+      var _this = this;
+
+      axios.get('/api/admin/posts?page=' + page).then(function (res) {
+        console.log(res);
+        _this.posts = res.data;
+        localStorage.setItem('posts', JSON.stringify(_this.posts));
+      }).then(function (err) {
+        return console.log(err);
+      });
+    }
+  }
 });
 $(document).ready(function () {
   // Activate tooltip
@@ -31734,45 +31754,67 @@ var render = function () {
         _c("table", { staticClass: "table table-striped table-hover" }, [
           _vm._m(1),
           _vm._v(" "),
-          _c("tbody", [
-            _c("tr", [
-              _c("td", [
-                _c("span", { staticClass: "custom-checkbox" }, [
-                  _c("input", {
-                    attrs: {
-                      type: "checkbox",
-                      id: "checkbox1" + _vm.index,
-                      name: "options[]",
-                      value: "1",
-                    },
-                  }),
-                  _vm._v(" "),
-                  _c("label", { attrs: { for: "checkbox1" + _vm.index } }),
-                ]),
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v("post title")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("post body ")]),
-              _vm._v(" "),
-              _vm._m(2),
-              _vm._v(" "),
-              _vm._m(3),
-              _vm._v(" "),
-              _c("td", [_vm._v("post creator")]),
-              _vm._v(" "),
-              _vm._m(4),
-            ]),
-          ]),
+          _vm.posts.data.length
+            ? _c(
+                "tbody",
+                _vm._l(_vm.posts.data, function (post, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", [
+                      _c("span", { staticClass: "custom-checkbox" }, [
+                        _c("input", {
+                          attrs: {
+                            type: "checkbox",
+                            id: "checkbox1" + index,
+                            name: "options[]",
+                            value: "1",
+                          },
+                        }),
+                        _vm._v(" "),
+                        _c("label", { attrs: { for: "checkbox1" + index } }),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(post.title))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(post.body.substr(0, 150)))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("span", { staticClass: "badge badge-info p-1 mb-1" }, [
+                        _vm._v(_vm._s(post.category.name)),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c("img", {
+                        staticStyle: {
+                          width: "100px",
+                          height: "60px",
+                          border: "1px solid #e7e7e7",
+                        },
+                        attrs: { src: "img/" + post.image, alt: "" },
+                      }),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(post.user.name))]),
+                    _vm._v(" "),
+                    _vm._m(2, true),
+                  ])
+                }),
+                0
+              )
+            : _vm._e(),
         ]),
         _vm._v(" "),
         _c(
           "div",
           { staticClass: "clearfix" },
           [
-            _vm._m(5),
+            _vm._m(3),
             _vm._v(" "),
-            _c("pagination", { attrs: { data: _vm.posts } }),
+            _c("pagination", {
+              attrs: { data: _vm.posts },
+              on: { "pagination-change-page": _vm.getPosts },
+            }),
           ],
           1
         ),
@@ -31783,9 +31825,9 @@ var render = function () {
       _c("div", { staticClass: "modal-dialog" }, [
         _c("div", { staticClass: "modal-content" }, [
           _c("form", { attrs: { enctype: "multipart/form-data" } }, [
-            _vm._m(6),
+            _vm._m(4),
             _vm._v(" "),
-            _vm._m(7),
+            _vm._m(5),
             _vm._v(" "),
             _c("div", { staticClass: "modal-footer" }, [
               _c("input", {
@@ -31813,9 +31855,9 @@ var render = function () {
       ]),
     ]),
     _vm._v(" "),
-    _vm._m(8),
+    _vm._m(6),
     _vm._v(" "),
-    _vm._m(9),
+    _vm._m(7),
   ])
 }
 var staticRenderFns = [
@@ -31898,31 +31940,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Action")]),
       ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("span", { staticClass: "badge badge-info p-1 mb-1" }, [
-        _vm._v("category name"),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("img", {
-        staticStyle: {
-          width: "100px",
-          height: "60px",
-          border: "1px solid #e7e7e7",
-        },
-        attrs: { alt: "" },
-      }),
     ])
   },
   function () {

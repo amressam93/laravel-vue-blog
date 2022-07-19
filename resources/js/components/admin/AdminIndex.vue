@@ -33,8 +33,9 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
+                    <tbody v-if="posts.data.length">
+
+                    <tr v-for="(post,index) in posts.data" :key="index">
                         <td>
                                 <span class="custom-checkbox">
                                     <input type="checkbox" :id="'checkbox1'+index"
@@ -42,15 +43,15 @@
                                     <label :for="'checkbox1'+index"></label>
                                 </span>
                         </td>
-                        <td>post title</td>
-                        <td>post body </td>
+                        <td>{{post.title}}</td>
+                        <td>{{post.body.substr(0,150)}}</td>
                         <td>
-                            <span class="badge badge-info p-1 mb-1">category name</span>
+                            <span class="badge badge-info p-1 mb-1">{{post.category.name}}</span>
                         </td>
                         <td>
-                            <img  style="width:100px;height:60px;border:1px solid #e7e7e7" alt="">
+                            <img :src="'img/'+post.image" style="width:100px;height:60px;border:1px solid #e7e7e7" alt="">
                         </td>
-                        <td>post creator</td>
+                        <td>{{post.user.name}}</td>
                         <td>
                             <a href="#editPostModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                             <a href="#deletePostModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
@@ -58,12 +59,11 @@
                         </td>
                     </tr>
 
-
                     </tbody>
                 </table>
                 <div class="clearfix">
                     <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                    <pagination :data="posts"></pagination>
+                    <pagination :data="posts" @pagination-change-page="getPosts"></pagination>
                 </div>
             </div>
         </div>
@@ -155,7 +155,30 @@
 
 export default {
 
-    name: "AdminIndex"
+    data(){
+        return {
+            posts: {},
+
+        }
+    },
+    created() {
+        this.getPosts();
+    },
+    methods: {
+
+        getPosts(page){
+            axios.get('/api/admin/posts?page='+page)
+                .then(res => {
+                    console.log(res);
+                    this.posts = res.data;
+                    localStorage.setItem('posts',JSON.stringify(this.posts))
+                })
+
+                .then(err => console.log(err))
+        }
+
+    }
+
 }
 
 
