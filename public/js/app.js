@@ -5552,6 +5552,7 @@ __webpack_require__.r(__webpack_exports__);
         email: email,
         password: password
       });
+      document.getElementById('close').click(); // hide bootstrap modal after login.
     }
   }
 });
@@ -31029,6 +31030,7 @@ var staticRenderFns = [
             type: "button",
             "data-dismiss": "modal",
             "aria-label": "Close",
+            id: "close",
           },
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]

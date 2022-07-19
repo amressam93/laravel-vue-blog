@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
 export default {
 
     data(){
@@ -63,15 +64,17 @@ export default {
         },
         isValidForm(){
             return this.password.length >= 8 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email))
+
         },
     },
     methods:{
-        submitLogin(){
 
-            let {email,password} = this;
-            this.$store.dispatch('LoginUser',{email,password})
+            submitLogin(){
+                let {email,password} = this;
+                this.$store.dispatch('LoginUser',{email,password})
+                document.getElementById('close').click();   // hide bootstrap modal after login.
+            }
 
-        }
     }
 
 }

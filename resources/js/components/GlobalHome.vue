@@ -73,6 +73,7 @@ export default {
                     })
             }
         },
+
         logout(){
             this.$store.commit('logout');
         }

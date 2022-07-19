@@ -32,6 +32,7 @@ Vue.component('login',require('./components/Login.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
 import router from './routes/routes'
 import Vuex from 'vuex'
 Vue.use(Vuex)
