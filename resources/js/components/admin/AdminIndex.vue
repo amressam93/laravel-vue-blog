@@ -53,9 +53,12 @@
                         </td>
                         <td>{{post.user.name}}</td>
                         <td>
-                            <a href="#editPostModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                            <a href="#editPostModal" class="edit"
+                               @click="editPost(post,$event)"
+                               data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                            </a>
                             <a href="#deletePostModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-<!--                            <router-link :to="'/post/'+post.slug" class="" target="_blank"><i class="material-icons" data-toggle="tooltip" title="Delete">&#128065;</i></router-link>-->
+                            <router-link :to="'/post/'+post.slug" class="" target="_blank"><i class="material-icons" data-toggle="tooltip" title="Delete">&#128065;</i></router-link>
                         </td>
                     </tr>
 
@@ -74,31 +77,31 @@
                     <form enctype="multipart/form-data">
                         <div class="modal-header">
                             <h4 class="modal-title">Add Post</h4>
-                            <button type="button" class="close" data-dismiss="modal" id="addPostCloseButtonModal" aria-hidden="true">&times;</button>
+                            <button type="button" class="close" id="addPostCloseButtonModal" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>title</label>
-                                <input type="text" name="" class="form-control" required v-model="title">
+                                <input type="text" class="form-control" required v-model="title">
                             </div>
                             <div class="form-group">
                                 <label>body</label>
-                                <textarea name="" cols="30" class="form-control" rows="10" v-model="body"></textarea>
+                                <textarea name=""  cols="30" class="form-control" v-model="body"
+                                          rows="10"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>category</label>
                                 <select name="" class="form-control" v-model="category">
-
                                     <option value="0" disabled selected>choose category</option>
-                                    <option :value="category.id" v-for="category in categories" :key="category.id">
-                                        {{category.name}}
-                                    </option>
 
+                                    <option :value="category.id" v-for="category in categories" :key="category.id">
+                                        {{ category.name }}
+                                    </option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>image</label>
-                                <input type="file"  ref="fileupload" class="form-control" required @change="onImageChange">
+                                <input type="file" ref="fileupload" class="form-control" required @change="onImageChange" >
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -109,7 +112,7 @@
                 </div>
             </div>
         </div>
-<!--        <editpost></editpost>-->
+        <editpost></editpost>
         <!-- Delete Modal HTML -->
         <div id="deletePostModal" class="modal fade">
             <div class="modal-dialog">
@@ -154,6 +157,7 @@
 
 <script>
 
+import editpost from './EditPost';
 export default {
 
     data(){
@@ -171,6 +175,10 @@ export default {
         this.getPosts();
         this.getCategories();
     },
+    components: {
+        editpost
+    },
+
     methods: {
 
         getPosts(page){
@@ -217,12 +225,15 @@ export default {
                     this.category = '';
                     this.image = '';
                     this.$refs.fileupload.value = null;
-                    
+
                     this.getPosts();
                      document.getElementById('addPostCloseButtonModal').click();    // close bootstrap modal after add post
                 })
                 .catch(err => console.log(err))
 
+        },
+        editPost(post){
+            this.$store.commit('EditPost',post);
         }
     }
 
@@ -254,8 +265,6 @@ $(document).ready(function() {
 });
 
 </script>
-
-
 
 
 <style scoped>

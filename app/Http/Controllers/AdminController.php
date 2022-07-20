@@ -49,7 +49,11 @@ class AdminController extends Controller
     }
 
 
-
+    /**
+     * add new post to database
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addPost(Request $request)
     {
         $filename = '';
@@ -71,6 +75,35 @@ class AdminController extends Controller
         $post->save();
         return response()->json($post);
     }
+
+
+    /**
+     * update post in database
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updatePost(Request $request)
+    {
+        $post = Post::find($request->id);
+        $filename = $post->image;
+        if($request->hasFile('image'))
+        {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $request->image->move(public_path('img'),$filename);
+        }
+        $post->title = $request->title;
+        $post->slug  = Str::slug($request->title);
+        $post->body = $request->body;
+        $post->category_id = $request->category;
+        $post->image = $filename != '' ? $filename : $post->image;
+        $post->save();
+        return response()->json($post);
+    }
+
+
+
+
 
 
 

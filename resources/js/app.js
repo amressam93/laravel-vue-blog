@@ -41,6 +41,7 @@ const store = new Vuex.Store({
     state: {
         userToken : null,
         user : null,
+        EditPost: {},
     },
     getters: {
         isLogged(state){
@@ -51,6 +52,10 @@ const store = new Vuex.Store({
                 return state.user.is_admin;
             }
             return null;
+        },
+
+        PostToEdit(state) {
+            return state.EditPost;
         }
     },
     mutations: {
@@ -75,6 +80,9 @@ const store = new Vuex.Store({
           state.userToken = null;
           localStorage.removeItem('userToken');
           window.location.pathname = "/";
+        },
+        EditPost(state,post){
+            state.EditPost = post;
         }
 
     },
