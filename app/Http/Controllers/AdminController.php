@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -33,6 +36,42 @@ class AdminController extends Controller
         }
         return response()->json($posts);
     }
+
+
+    /**
+     * get all categories from database
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCategories()
+    {
+        $categories = Category::all();
+        return response()->json($categories);
+    }
+
+
+
+    public function addPost(Request $request)
+    {
+        $filename = '';
+
+        if($request->hasFile('image'))
+        {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img'), $filename);
+        }
+
+        $post = new Post();
+        $post->title = $request->title;
+        $post->slug  = Str::slug($request->title);
+        $post->body = $request->body;
+        $post->user_id = Auth::id();
+        $post->category_id = $request->category;
+        $post->image = $filename;
+        $post->save();
+        return response()->json($post);
+    }
+
 
 
 

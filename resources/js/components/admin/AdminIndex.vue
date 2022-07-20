@@ -33,7 +33,7 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    <tbody v-if="posts.data.length">
+                    <tbody v-if="posts.data">
 
                     <tr v-for="(post,index) in posts.data" :key="index">
                         <td>
@@ -62,7 +62,7 @@
                     </tbody>
                 </table>
                 <div class="clearfix">
-                    <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                    <div class="hint-text">Showing <b>{{posts.to}}</b> out of <b>{{posts.total}}</b> entries</div>
                     <pagination :data="posts" @pagination-change-page="getPosts"></pagination>
                 </div>
             </div>
@@ -74,30 +74,31 @@
                     <form enctype="multipart/form-data">
                         <div class="modal-header">
                             <h4 class="modal-title">Add Post</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" id="addPostCloseButtonModal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>title</label>
-                                <input type="text" class="form-control" required>
+                                <input type="text" name="" class="form-control" required v-model="title">
                             </div>
                             <div class="form-group">
                                 <label>body</label>
-                                <textarea name="" cols="30" class="form-control" rows="10"></textarea>
+                                <textarea name="" cols="30" class="form-control" rows="10" v-model="body"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>category</label>
-                                <select name="" class="form-control">
-                                    <option value="0" disabled selected>choose category</option>
+                                <select name="" class="form-control" v-model="category">
 
-                                    <option value="1" >
-                                        some category name
+                                    <option value="0" disabled selected>choose category</option>
+                                    <option :value="category.id" v-for="category in categories" :key="category.id">
+                                        {{category.name}}
                                     </option>
+
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>image</label>
-                                <input type="file" class="form-control" required>
+                                <input type="file"  ref="fileupload" class="form-control" required @change="onImageChange">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -158,11 +159,17 @@ export default {
     data(){
         return {
             posts: {},
+            title: '',
+            body: '',
+            category: '',
+            image: '',
+            categories: []
 
         }
     },
     created() {
         this.getPosts();
+        this.getCategories();
     },
     methods: {
 
@@ -175,8 +182,48 @@ export default {
                 })
 
                 .then(err => console.log(err))
-        }
+        },
 
+        getCategories(){
+            axios.get('/api/admin/categories')
+                .then(res => {
+                    console.log(res.data);
+                    this.categories = res.data;
+                })
+
+                .then(err => console.log(err))
+        },
+
+        onImageChange(e){
+            console.log(e.target.files[0]);
+            this.image = e.target.files[0];
+        },
+        addPost(){
+            let config ={
+                headers: {"content-type" : "multipart/form-data"}
+            }
+
+            let formData = new FormData();
+            formData.append('title',this.title)
+            formData.append('body',this.body)
+            formData.append('image',this.image)
+            formData.append('category',this.category)
+            axios.post('/api/admin/addPost',formData,config)
+                .then(res => {
+                    console.log(res);
+                    // reset inputs
+                    this.title = '';
+                    this.body = '';
+                    this.category = '';
+                    this.image = '';
+                    this.$refs.fileupload.value = null;
+                    
+                    this.getPosts();
+                     document.getElementById('addPostCloseButtonModal').click();    // close bootstrap modal after add post
+                })
+                .catch(err => console.log(err))
+
+        }
     }
 
 }
