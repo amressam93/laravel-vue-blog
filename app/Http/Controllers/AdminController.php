@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -27,7 +28,7 @@ class AdminController extends Controller
      */
     public function getPosts()
     {
-        $posts = Post::latest()->with('user','category')->paginate(1);
+        $posts = Post::latest()->with('user','category')->paginate(5);
         foreach ($posts as $post) {
 
             $post->SetAttribute('added_at', $post->created_at->diffForHumans());
@@ -102,9 +103,20 @@ class AdminController extends Controller
     }
 
 
-
-
-
+    /**
+     * delete posts from database.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deletePosts(Request $request)
+    {
+        $ids = $request->posts_ids;
+        Post::whereIn('id', $ids)->get()->each(function($post) {
+            unlink("img/".$post->image);
+            $post->delete();
+        });
+        return response()->json(['success' => 'Posts deleted successfully.']);
+    }
 
 
 

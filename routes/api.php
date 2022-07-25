@@ -43,6 +43,7 @@ Route::group(['prefix' => '/admin','middleware' => 'auth:api'],function(){
     Route::get('categories',[AdminController::class,'getCategories']);
     Route::post('addPost',[AdminController::class,'addPost']);
     Route::post('updatePost',[AdminController::class,'updatePost']);
+    Route::post('deletePosts',[AdminController::class,'deletePosts']);
 
 });
 
